@@ -1,4 +1,4 @@
-package no.talkmore.faktura.esim
+package com.veon.oq.esim
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -8,15 +8,14 @@ import android.content.Context
 import android.content.Context.EUICC_SERVICE
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.IntentSender.SendIntentException 
-import androidx.core.content.ContextCompat;
-import androidx.core.content.IntentSanitizer;
+import androidx.core.content.ContextCompat
+import androidx.core.content.IntentSanitizer
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.telephony.euicc.DownloadableSubscription
 import android.telephony.euicc.EuiccManager
-import android.util.Log
+import androidx.annotation.RequiresApi
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -55,7 +54,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         }
 
         fun initSharedInstance(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-            if (!::instance.isInitialized) {
+            if (!Companion::instance.isInitialized) {
                 instance = FlutterEsimPlugin()
                 instance.context = flutterPluginBinding.applicationContext
             }
@@ -81,13 +80,14 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
     private val REQUEST_CODE_INSTALL = 0
     private val ACTION_DOWNLOAD_SUBSCRIPTION = "download_subscription"
-    private val LPA_DECLARED_PERMISSION = "no.talkmore.faktura.lpa.permission.BROADCAST";
-    private val ALLOWED_PACKAGE = "no.talkmore.faktura";
+    //    private val LPA_DECLARED_PERMISSION = "com.veon.oq.lpa.permission.BROADCAST"
+    private val ALLOWED_PACKAGE = "com.veon.oq"
 
     private var mgr: EuiccManager? = null
 
 
     private val receiver: BroadcastReceiver = object : BroadcastReceiver() {
+        @RequiresApi(Build.VERSION_CODES.P)
         override fun onReceive(context: Context, intent: Intent) {
             if (ACTION_DOWNLOAD_SUBSCRIPTION != intent.action) {
                 return
@@ -98,9 +98,9 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             } else if (resultCode == EuiccManager.EMBEDDED_SUBSCRIPTION_RESULT_OK) {
                 sendEvent("1", hashMapOf("resultCode" to resultCode, "message" to "Successfully installed ESIM"))
             } else if (resultCode == EuiccManager.EMBEDDED_SUBSCRIPTION_RESULT_ERROR) {
-                val resultCode = getResultCode()
-                val resultData = getResultData()
-                val resultExtras = getResultExtras(false)
+                val resultCode = resultCode
+//                val resultData = resultData
+//                val resultExtras = getResultExtras(false)
 
                 val detailsBody = hashMapOf("resultCode" to resultCode, "message" to "failed to install ESIM")
                 sendEvent("3", detailsBody)
@@ -114,14 +114,14 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     override fun onMethodCall(call: MethodCall, result: Result) {
         try {
             when (call.method) {
-                "isSupportESim" -> {
-                    Log.d("isSupportESim", "")
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                        result.success(mgr?.isEnabled)
-                    }else {
-                        result.success(false)
-                    }
-                }
+//                "isSupportESim" -> {
+//                    Log.d("isSupportESim", "")
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+//                        result.success(mgr?.isEnabled)
+//                    }else {
+//                        result.success(false)
+//                    }
+//                }
 
                 "installEsimProfile" -> {
 
@@ -151,20 +151,20 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                         ContextCompat.registerReceiver(
                             context!!,
                             receiver,
-                            filter, 
+                            filter,
                             null,
-                            null, 
+                            null,
                             ContextCompat.RECEIVER_NOT_EXPORTED
                         )
                     }
 
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                         val activationCode = (call.arguments as HashMap<*, *>)["profile"] as String
-                        val sub = DownloadableSubscription.forActivationCode(activationCode);
-                        val intent = Intent(ACTION_DOWNLOAD_SUBSCRIPTION).setPackage(context?.getPackageName());
+                        val sub = DownloadableSubscription.forActivationCode(activationCode)
+                        val intent = Intent(ACTION_DOWNLOAD_SUBSCRIPTION).setPackage(context?.packageName)
                         val callbackIntent = PendingIntent.getBroadcast(
-                            context, 
-                            REQUEST_CODE_INSTALL, 
+                            context,
+                            REQUEST_CODE_INSTALL,
                             intent,
                             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
                         )
@@ -180,6 +180,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.P)
     private fun handleResolvableError(intent: Intent) {
         val safeIntent = IntentSanitizer.Builder()
             .allowAnyComponent()
@@ -188,12 +189,11 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             .allowExtra("android.telephony.euicc.extra.EMBEDDED_SUBSCRIPTION_RESOLUTION_INTENT", PendingIntent::class.java)
             .allowAction(ACTION_DOWNLOAD_SUBSCRIPTION)
             .build()
-            .sanitizeByThrowing(intent);
-
+            .sanitizeByThrowing(intent)
         val callbackIntent = PendingIntent.getBroadcast(
-            context, 
-            REQUEST_CODE_INSTALL, 
-            safeIntent, 
+            context,
+            REQUEST_CODE_INSTALL,
+            safeIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
         )
 

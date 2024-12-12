@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <permission android:protectionLevel="signature" android:name="no.talkmore.faktura.lpa.permission.BROADCAST" />
-    <uses-permission android:name="no.talkmore.faktura.lpa.permission.BROADCAST"/>
+    <permission android:protectionLevel="signature" android:name="com.veon.oq.lpa.permission.BROADCAST" />
+    <uses-permission android:name="com.veon.oq.lpa.permission.BROADCAST"/>
     <uses-permission android:name="android.permission.WRITE_EMBEDDED_SUBSCRIPTIONS"
         tools:ignore="ProtectedPermissions" />
 
