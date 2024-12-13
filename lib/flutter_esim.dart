@@ -12,5 +12,5 @@ class FlutterEsim {
     return FlutterEsimPlatform.instance.installEsimProfile(profile);
   }
 
-  Stream<dynamic> get onEvent => FlutterEsimPlatform.instance.onEvent;
+  Stream<EsimInstallResponse?> get onEvent => FlutterEsimPlatform.instance.onEvent;
 }

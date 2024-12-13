@@ -14,23 +14,24 @@ class MethodChannelFlutterEsim extends FlutterEsimPlatform {
 
   @override
   Future<bool> isSupportESim(List<String>? newer) async {
-    final isSupportESim =
-        await methodChannel.invokeMethod<bool>('isSupportESim', []);
+    final isSupportESim = await methodChannel.invokeMethod<bool>('isSupportESim', []);
     return isSupportESim ?? false;
   }
 
   @override
   Future<String> installEsimProfile(String profile) async {
-    final result = await methodChannel
-        .invokeMethod<String>('installEsimProfile', {'profile': profile});
+    final result = await methodChannel.invokeMethod<String>('installEsimProfile', {'profile': profile});
     return result ?? "";
   }
 
   @override
-  Stream<dynamic> get onEvent =>
-      eventChannel.receiveBroadcastStream().map(_receiveCallEvent);
+  Stream<EsimInstallResponse?> get onEvent => eventChannel.receiveBroadcastStream().map(_receiveCallEvent);
 
-  dynamic _receiveCallEvent(dynamic data) {
-    return data;
+  EsimInstallResponse? _receiveCallEvent(dynamic data) {
+    if (data is Map<String, dynamic>) {
+      return EsimInstallResponse.fromJson(data);
+    } else {
+      throw FormatException("Unexpected data format: $data");
+    }
   }
 }

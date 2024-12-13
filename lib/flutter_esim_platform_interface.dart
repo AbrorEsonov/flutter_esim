@@ -33,6 +33,29 @@ abstract class FlutterEsimPlatform extends PlatformInterface {
     throw UnimplementedError('installEsimProfile() has not been implemented.');
   }
 
-  Stream<dynamic> get onEvent =>
+  Stream<EsimInstallResponse?> get onEvent =>
       throw UnimplementedError('onEvent() has not been implemented.');
+}
+
+class EsimInstallResponse {
+  final String? event;
+  final Map<String, dynamic> body;
+
+  EsimInstallResponse({
+    required this.event,
+    required this.body,
+  });
+
+  factory EsimInstallResponse.fromJson(Map<String, dynamic> json) {
+    return EsimInstallResponse(
+      event: json['event'] as String,
+      body: json['body'] as Map<String, dynamic>,
+    );
+  }
+
+  int get resultCode => body['resultCode'] as int? ?? 0;
+  String get message => body['message'] as String? ?? '';
+
+  @override
+  String toString() => 'EsimInstallResponse(event: $event, body: $body)';
 }
