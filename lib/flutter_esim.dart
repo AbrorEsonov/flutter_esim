@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'esim_install_response.dart';
 import 'flutter_esim_platform_interface.dart';
 
 class FlutterEsim {
@@ -17,7 +18,11 @@ class FlutterEsim {
 
   Future<EsimInstallResponse?> waitForSuccessEvent({Duration timeout = const Duration(seconds: 10)}) async {
     try {
-      return FlutterEsimPlatform.instance.onEvent.where((event) => event?.event == "1").timeout(timeout).first;
+      print("Trying sometinhhhhhhh");
+      return FlutterEsimPlatform.instance.onEvent
+          .where((EsimInstallResponse? event) => event?.event == "1")
+          .timeout(timeout)
+          .first;
     } on TimeoutException {
       return null;
     }
