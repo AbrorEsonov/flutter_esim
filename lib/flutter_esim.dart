@@ -20,10 +20,11 @@ class FlutterEsim {
     try {
       print("Trying sometinhhhhhhh");
       return FlutterEsimPlatform.instance.onEvent
-          .where((EsimInstallResponse? event) => event?.event == "1")
+          .where((EsimInstallResponse? event) => event != null && event.event == "1")
           .timeout(timeout)
           .first;
     } on TimeoutException {
+      print("Timeout occurred");
       return null;
     }
   }

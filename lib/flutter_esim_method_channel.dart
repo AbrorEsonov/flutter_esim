@@ -26,8 +26,18 @@ class MethodChannelFlutterEsim extends FlutterEsimPlatform {
   }
 
   @override
-  Stream<EsimInstallResponse?> get onEvent => eventChannel.receiveBroadcastStream().map((data){
-    print("Data: $data");
-    return EsimInstallResponse.fromJson(data);
-  });
+  Stream<EsimInstallResponse?> get onEvent => eventChannel.receiveBroadcastStream().map((data) {
+        print("Received event: $data"); // Log incoming data
+        if (data is Map<String, dynamic>) {
+          try {
+            return EsimInstallResponse.fromJson(data);
+          } catch (e) {
+            print('Error parsing event: $e');
+            return null;
+          }
+        } else {
+          print('Unexpected data format: $data');
+          return null;
+        }
+      });
 }
