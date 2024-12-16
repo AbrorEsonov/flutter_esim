@@ -18,7 +18,7 @@ class FlutterEsim {
 
   Future<EsimInstallResponse?> waitForSuccessEvent({Duration timeout = const Duration(seconds: 10)}) async {
     try {
-      print("Trying sometinhhhhhhh");
+      print("Trying sometinhhhhhhh sdfmsdlkngfsdlkg");
       return FlutterEsimPlatform.instance.onEvent
           .where((EsimInstallResponse? event) => event != null && event.event == "1")
           .timeout(timeout)
