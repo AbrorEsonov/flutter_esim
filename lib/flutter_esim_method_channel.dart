@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
-import 'esim_install_response.dart';
 import 'flutter_esim_platform_interface.dart';
 
 /// An implementation of [FlutterEsimPlatform] that uses method channels.
@@ -26,18 +25,7 @@ class MethodChannelFlutterEsim extends FlutterEsimPlatform {
   }
 
   @override
-  Stream<EsimInstallResponse?> get onEvent => eventChannel.receiveBroadcastStream().map((data) {
-        print("Received event: $data"); // Log incoming data
-        if (data is Map<String, dynamic>) {
-          try {
-            return EsimInstallResponse.fromJson(data);
-          } catch (e) {
-            print('Error parsing event: $e');
-            return null;
-          }
-        } else {
-          print('Unexpected data format: $data');
-          return null;
-        }
+  Stream<dynamic> get onEvent => eventChannel.receiveBroadcastStream().map((data) {
+        return data;
       });
 }

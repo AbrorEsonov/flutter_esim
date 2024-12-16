@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-import 'esim_install_response.dart';
 import 'flutter_esim_method_channel.dart';
 
 abstract class FlutterEsimPlatform extends PlatformInterface {
@@ -34,6 +33,6 @@ abstract class FlutterEsimPlatform extends PlatformInterface {
     throw UnimplementedError('installEsimProfile() has not been implemented.');
   }
 
-  Stream<EsimInstallResponse?> get onEvent =>
+  Stream<dynamic> get onEvent =>
       throw UnimplementedError('onEvent() has not been implemented.');
 }
