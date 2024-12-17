@@ -49,7 +49,6 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
         fun sendEvent(event: String, body: Map<String, Any>) {
             eventHandlers.reapCollection().forEach {
-                Log.d(TAG_ESIM, "sendEvent Android: ${it.get()}")
                 it.get()?.send(event, body)
             }
         }
