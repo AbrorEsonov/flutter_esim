@@ -21,11 +21,13 @@ class MethodChannelFlutterEsim extends FlutterEsimPlatform {
   @override
   Future<String> installEsimProfile(String profile) async {
     final result = await methodChannel.invokeMethod<String>('installEsimProfile', {'profile': profile});
+    debugPrint("ProfileResult: $result");
     return result ?? "";
   }
 
   @override
   Stream<dynamic> get onEvent => eventChannel.receiveBroadcastStream().map((data) {
+        debugPrint("Data: $data");
         return data;
       });
 }

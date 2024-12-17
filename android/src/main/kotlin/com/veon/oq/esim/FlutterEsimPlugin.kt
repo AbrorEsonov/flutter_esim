@@ -15,6 +15,7 @@ import android.os.Handler
 import android.os.Looper
 import android.telephony.euicc.DownloadableSubscription
 import android.telephony.euicc.EuiccManager
+import android.util.Log
 import androidx.annotation.RequiresApi
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
@@ -32,6 +33,7 @@ import java.lang.ref.WeakReference
 class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
     companion object {
+        const val TAG_ESIM = "TAG_ESIM"
 
         private fun <T, C : MutableCollection<WeakReference<T>>> C.reapCollection(): C {
             this.removeAll {
@@ -49,6 +51,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
         fun sendEvent(event: String, body: Map<String, Any>) {
             eventHandlers.reapCollection().forEach {
+                Log.d(TAG_ESIM, "sendEvent Android: ${it.get()}")
                 it.get()?.send(event, body)
             }
         }
