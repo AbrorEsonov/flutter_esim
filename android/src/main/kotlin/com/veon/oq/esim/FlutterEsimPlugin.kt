@@ -224,7 +224,8 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         instance.context = binding.activity.applicationContext
         instance.activity = binding.activity
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            instance.mgr = instance.context?.getSystemService(EUICC_SERVICE) as EuiccManager
+            // Some devices (e.g. certain HyperOS builds) return null for EUICC_SERVICE.
+            instance.mgr = instance.context?.getSystemService(EUICC_SERVICE) as? EuiccManager
         }
     }
 
@@ -236,7 +237,8 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         instance.context = binding.activity.applicationContext
         instance.activity = binding.activity
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            instance.mgr = instance.context?.getSystemService(EUICC_SERVICE) as EuiccManager
+            // Some devices (e.g. certain HyperOS builds) return null for EUICC_SERVICE.
+            instance.mgr = instance.context?.getSystemService(EUICC_SERVICE) as? EuiccManager
         }
     }
 
